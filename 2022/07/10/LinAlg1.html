@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="twitter:card" content="summary_large_image" /><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Linear Algebra | Gui’s DS Journey</title>
+<meta name="generator" content="Jekyll v4.1.1" />
+<meta property="og:title" content="Linear Algebra" />
+<meta name="author" content="Gui Osorio" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Vector norm and matrix multiplication" />
+<meta property="og:description" content="Vector norm and matrix multiplication" />
+<link rel="canonical" href="https://guiosorio.github.io/Gui-DS-Journey/2022/07/10/LinAlg1.html" />
+<meta property="og:url" content="https://guiosorio.github.io/Gui-DS-Journey/2022/07/10/LinAlg1.html" />
+<meta property="og:site_name" content="Gui’s DS Journey" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2022-07-10T00:00:00-05:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Linear Algebra" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Gui Osorio"},"dateModified":"2022-07-10T00:00:00-05:00","datePublished":"2022-07-10T00:00:00-05:00","description":"Vector norm and matrix multiplication","headline":"Linear Algebra","mainEntityOfPage":{"@type":"WebPage","@id":"https://guiosorio.github.io/Gui-DS-Journey/2022/07/10/LinAlg1.html"},"url":"https://guiosorio.github.io/Gui-DS-Journey/2022/07/10/LinAlg1.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/Gui-DS-Journey/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://guiosorio.github.io/Gui-DS-Journey/feed.xml" title="Gui's DS Journey" /><link rel="shortcut icon" type="image/x-icon" href="/Gui-DS-Journey/images/favicon.ico"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/15.2.0/primer.css" integrity="sha512-xTz2ys4coGAOz8vuV1NcQBkgVmKhsSEtjbqyMJbBHRplFuvKIUo6xhLHpAyPt9mfR6twHJgn9OgVLuqOvjeBhg==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title") && (el.className != "emoji")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/Gui-DS-Journey/">Gui&#39;s DS Journey</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/Gui-DS-Journey/about/">About Me</a><a class="page-link" href="/Gui-DS-Journey/search/">Search</a><a class="page-link" href="/Gui-DS-Journey/categories/">Tags</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Linear Algebra</h1><p class="page-description">Vector norm and matrix multiplication</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2022-07-10T00:00:00-05:00" itemprop="datePublished">
+        Jul 10, 2022
+      </time>• 
+          <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+            <span class="p-author h-card" itemprop="name">Gui Osorio</span></span>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      4 min read
+    
+</span></p>
+
+    
+
+    
+      
+        <div class="pb-5 d-flex flex-justify-center">
+          <div class="px-2">
+
+    <a href="https://github.com/guiOsorio/Gui-DS-Journey/tree/true/_notebooks/2022-07-10-LinAlg1.ipynb" role="button" target="_blank">
+<img class="notebook-badge-image" src="/Gui-DS-Journey/assets/badges/github.svg" alt="View On GitHub">
+    </a>
+</div>
+
+          <div class="px-2">
+    <a href="https://mybinder.org/v2/gh/guiOsorio/Gui-DS-Journey/true?filepath=_notebooks%2F2022-07-10-LinAlg1.ipynb" target="_blank">
+        <img class="notebook-badge-image" src="/Gui-DS-Journey/assets/badges/binder.svg" alt="Open In Binder"/>
+    </a>
+</div>
+
+          <div class="px-2">
+    <a href="https://colab.research.google.com/github/guiOsorio/Gui-DS-Journey/blob/true/_notebooks/2022-07-10-LinAlg1.ipynb" target="_blank">
+        <img class="notebook-badge-image" src="/Gui-DS-Journey/assets/badges/colab.svg" alt="Open In Colab"/>
+    </a>
+</div>
+          <div class="px-2">
+  <a href="https://deepnote.com/launch?url=https%3A%2F%2Fgithub.com%2FguiOsorio%2FGui-DS-Journey%2Fblob%2Ftrue%2F_notebooks%2F2022-07-10-LinAlg1.ipynb" target="_blank">
+      <img class="notebook-badge-image" src="/Gui-DS-Journey/assets/badges/deepnote.svg" alt="Launch in Deepnote"/>
+  </a>
+</div>
+
+        </div>
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <ul id="toc" class="section-nav">
+<li class="toc-entry toc-h2"><a href="#Vector-Norm/Magnitude">Vector Norm/Magnitude </a>
+<ul>
+<li class="toc-entry toc-h3"><a href="#L1-norm">L1 norm </a>
+<ul>
+<li class="toc-entry toc-h4"><a href="#Single-vector">Single vector </a></li>
+<li class="toc-entry toc-h4"><a href="#Two-vectors">Two vectors </a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h3"><a href="#L2-norm">L2 norm </a>
+<ul>
+<li class="toc-entry toc-h4"><a href="#Single-vector">Single vector </a></li>
+<li class="toc-entry toc-h4"><a href="#Two-vectors">Two vectors </a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h3"><a href="#Max-norm">Max norm </a>
+<ul>
+<li class="toc-entry toc-h4"><a href="#Single-vector">Single vector </a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-entry toc-h2"><a href="#Matrix-Multiplication">Matrix Multiplication </a>
+<ul>
+<li class="toc-entry toc-h3"><a href="#Matrix-Matrix">Matrix-Matrix </a></li>
+<li class="toc-entry toc-h3"><a href="#Matrix-Vector">Matrix-Vector </a></li>
+</ul>
+</li>
+</ul><!--
+#################################################
+### THIS FILE WAS AUTOGENERATED! DO NOT EDIT! ###
+#################################################
+# file to edit: _notebooks/2022-07-10-LinAlg1.ipynb
+-->
+
+<div class="container" id="notebook-container">
+        
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Vector-Norm/Magnitude">
+<a class="anchor" href="#Vector-Norm/Magnitude" aria-hidden="true"><span class="octicon octicon-link"></span></a>Vector Norm/Magnitude<a class="anchor-link" href="#Vector-Norm/Magnitude"> </a>
+</h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Vector norm refers to calculating a vector's length. In practice, higher coefficients lead to less accurate models, therefore vector norm calculation is useful in ML, as it can be used in techniques to calibrate ML models -&gt; minimizing the loss and preventing overfitting and underfitting. As the distance between two vectors is a single vector, claculating the resulting vector's norm can also be used as a loss function of a ML model.</p>
+<p>Common methods to calculate a vector's norm are:</p>
+<ul>
+<li>L1 norm</li>
+<li>L2 norm (root mean squared error)</li>
+<li>Max norm</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="L1-norm">
+<a class="anchor" href="#L1-norm" aria-hidden="true"><span class="octicon octicon-link"></span></a>L1 norm<a class="anchor-link" href="#L1-norm"> </a>
+</h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Refers to the sum of absolute values in a vector. Summarizes the distance from the vector to its origin in space.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Single-vector">
+<a class="anchor" href="#Single-vector" aria-hidden="true"><span class="octicon octicon-link"></span></a>Single vector<a class="anchor-link" href="#Single-vector"> </a>
+</h4>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<details class="description">
+      <summary class="btn btn-sm" data-open="Hide Code" data-close="Show Code"></summary>
+        <p></p>
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">torch.nn.functional</span> <span class="k">as</span> <span class="nn">F</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+    </details>
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Define a vector</span>
+<span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
+
+<span class="c1"># Calculate L1 from scrach</span>
+<span class="k">def</span> <span class="nf">calc_l1norm</span><span class="p">(</span><span class="n">vec</span><span class="p">):</span> <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">vec</span><span class="o">.</span><span class="n">sum</span><span class="p">()))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'From scratch: '</span><span class="p">,</span> <span class="n">calc_l1norm</span><span class="p">(</span><span class="n">v</span><span class="p">))</span>
+
+<span class="c1"># Calculate L1 norm using NumPy</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'Using NumPy.linalg: '</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>From scratch:  6.0
+Using NumPy.linalg:  6.0
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>In the case above, the L1 norm can be calculated with the simple addition: 1 + 2 + 3 = 6</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Two-vectors">
+<a class="anchor" href="#Two-vectors" aria-hidden="true"><span class="octicon octicon-link"></span></a>Two vectors<a class="anchor-link" href="#Two-vectors"> </a>
+</h4>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Define 2 tensors</span>
+<span class="n">t1</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">2.</span><span class="p">,</span><span class="mf">3.</span><span class="p">])</span>
+<span class="n">t2</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">4.</span><span class="p">,</span><span class="mf">5.</span><span class="p">,</span><span class="mf">6.</span><span class="p">])</span>
+
+<span class="c1"># Calculate L1 norm from scratch</span>
+<span class="k">def</span> <span class="nf">calc_l1norm2</span><span class="p">(</span><span class="n">tensor1</span><span class="p">,</span> <span class="n">tensor2</span><span class="p">):</span> <span class="k">return</span> <span class="p">(</span><span class="n">tensor1</span><span class="o">-</span><span class="n">tensor2</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'From scratch: '</span><span class="p">,</span> <span class="n">calc_l1norm2</span><span class="p">(</span><span class="n">t1</span><span class="p">,</span><span class="n">t2</span><span class="p">))</span>
+
+<span class="c1"># Calculate L1 norm using PyTorch</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'Using PyTorch: '</span><span class="p">,</span> <span class="n">F</span><span class="o">.</span><span class="n">l1_loss</span><span class="p">(</span><span class="n">t1</span><span class="p">,</span> <span class="n">t2</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>From scratch:  tensor(3.)
+Using PyTorch:  tensor(3.)
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ol>
+<li>Subtract tensors -&gt; t1 - t2 = [-3.,-3.,-3.]</li>
+<li>Convert to absolute values -&gt; [3.,3.,3.].</li>
+<li>The L1 norm of this vector can then be calculated as taking the mean of these values -&gt; (3+3+3)/3 = 3</li>
+</ol>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="L2-norm">
+<a class="anchor" href="#L2-norm" aria-hidden="true"><span class="octicon octicon-link"></span></a>L2 norm<a class="anchor-link" href="#L2-norm"> </a>
+</h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Refers to the root mean squared error of the values in a vector.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Single-vector">
+<a class="anchor" href="#Single-vector" aria-hidden="true"><span class="octicon octicon-link"></span></a>Single vector<a class="anchor-link" href="#Single-vector"> </a>
+</h4>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Define a vector</span>
+<span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">2.</span><span class="p">,</span><span class="mf">3.</span><span class="p">])</span>
+
+<span class="c1"># Calculate L2 from scratch</span>
+<span class="k">def</span> <span class="nf">calc_l2norm</span><span class="p">(</span><span class="n">vec</span><span class="p">):</span> <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(((</span><span class="n">vec</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'From scratch: '</span><span class="p">,</span> <span class="n">calc_l2norm</span><span class="p">(</span><span class="n">v</span><span class="p">))</span>
+
+<span class="c1"># Calculate L2 norm using NumPy</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'Using NumPy.linalg: '</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>From scratch:  3.7416573867739413
+Using NumPy.linalg:  3.7416573867739413
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ol>
+<li>The vector is transformed into its squared version [1<strong>2, 2</strong>2, 3**3] -&gt; [1,4,9].</li>
+<li>The squared vector is summed up 1 + 4 + 9 -&gt; 14</li>
+<li>The L2 is equal to the square root of the scalar sqrt(14) -&gt; 3.742</li>
+</ol>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Two-vectors">
+<a class="anchor" href="#Two-vectors" aria-hidden="true"><span class="octicon octicon-link"></span></a>Two vectors<a class="anchor-link" href="#Two-vectors"> </a>
+</h4>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Define 2 tensors</span>
+<span class="n">t1</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">2.</span><span class="p">,</span><span class="mf">3.</span><span class="p">])</span>
+<span class="n">t2</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">4.</span><span class="p">,</span><span class="mf">5.</span><span class="p">,</span><span class="mf">6.</span><span class="p">])</span>
+
+<span class="c1"># Calculate L2 norm from scratch</span>
+<span class="k">def</span> <span class="nf">calc_l2norm2</span><span class="p">(</span><span class="n">tensor1</span><span class="p">,</span> <span class="n">tensor2</span><span class="p">):</span> <span class="k">return</span> <span class="p">((</span><span class="n">tensor1</span><span class="o">-</span><span class="n">tensor2</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">sqrt</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'From scratch: '</span><span class="p">,</span> <span class="n">calc_l2norm2</span><span class="p">(</span><span class="n">t1</span><span class="p">,</span> <span class="n">t2</span><span class="p">))</span>
+
+<span class="c1"># Calculate L2 norm using PyTorch</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'Using PyTorch: '</span><span class="p">,</span> <span class="n">F</span><span class="o">.</span><span class="n">mse_loss</span><span class="p">(</span><span class="n">t1</span><span class="p">,</span> <span class="n">t2</span><span class="p">)</span><span class="o">.</span><span class="n">sqrt</span><span class="p">())</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>From scratch:  tensor(3.)
+Using PyTorch:  tensor(3.)
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ol>
+<li>Subtract tensors -&gt; [1-4,2-5,3-6] -&gt; [-3,-3,-3]</li>
+<li>Square the subtracted tensor -&gt; [-3<strong>2,-3</strong>2,-3**2] -&gt; [9,9,9]</li>
+<li>Calculate the mean as a scalar -&gt; (9+9+9)/3 = 9</li>
+<li>Calculate the square root of the scalar -&gt; sqrt(9) = 3</li>
+</ol>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Max-norm">
+<a class="anchor" href="#Max-norm" aria-hidden="true"><span class="octicon octicon-link"></span></a>Max norm<a class="anchor-link" href="#Max-norm"> </a>
+</h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Returns the maximum absolute value of the vector.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Single-vector">
+<a class="anchor" href="#Single-vector" aria-hidden="true"><span class="octicon octicon-link"></span></a>Single vector<a class="anchor-link" href="#Single-vector"> </a>
+</h4>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Define vector</span>
+<span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
+
+<span class="c1"># Calculate max norm from scratch</span>
+<span class="k">def</span> <span class="nf">calc_maxnorm</span><span class="p">(</span><span class="n">vec</span><span class="p">):</span> <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">vec</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'From scratch: '</span><span class="p">,</span> <span class="n">calc_maxnorm</span><span class="p">(</span><span class="n">v</span><span class="p">))</span>
+
+<span class="c1"># Calculate max norm using NumPy.linalg</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'Using NumPy: '</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>From scratch:  3
+Using NumPy:  3.0
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Matrix-Multiplication">
+<a class="anchor" href="#Matrix-Multiplication" aria-hidden="true"><span class="octicon octicon-link"></span></a>Matrix Multiplication<a class="anchor-link" href="#Matrix-Multiplication"> </a>
+</h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Matrix multiplication is not so straight-forward as you may think. Below, I will explain the dot product between matrixes. The conventional multiplication you may be thinking of, when referred to vectors, is called the Hadamard multiplication.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Matrix-Matrix">
+<a class="anchor" href="#Matrix-Matrix" aria-hidden="true"><span class="octicon octicon-link"></span></a>Matrix-Matrix<a class="anchor-link" href="#Matrix-Matrix"> </a>
+</h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Let's say we have two matrixes, M1 and M2. Their dimensions (rows, columns) are (m,n) for M1 and (n,k) for M2.
+For them to be multiplied, a simple requirement needs to be satisfied: n must be equal, that is, the number of columns in M1 needs to be equal to the number of rows in M2.
+The resulting matrix will be of dimensions (m,k), that is, the number of rows of M1, and the number of columns of M2.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Let's represent this by multiplying a 2x3 matrix with a 3x2 matrix.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">M1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">]])</span> <span class="c1"># 2x3 matrix</span>
+<span class="n">M2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">]])</span> <span class="c1"># 3x2 matrix</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">M1</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'------------'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">M2</span><span class="p">)</span>
+<span class="n">M1</span> <span class="o">@</span> <span class="n">M2</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[[1 2 3]
+ [4 5 6]]
+------------
+[[1 2]
+ [3 4]
+ [5 6]]
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>array([[22, 28],
+       [49, 64]])</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>As noted above, the resulting matrix has dimensions (2,2).</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>Position [0,0] = M1[0,0] <em> M2[0,0] + M1[0,1] </em> M2[1,0] + M1[0,2] <em> M2[2,0] = 1 </em> 1 + 2 <em> 3 + 3 </em> 5 = 22</li>
+<li>Position [0,1] = M1[0,0] <em> M2[0,1] + M1[0,1] </em> M2[1,1] + M1[0,2] <em> M2[2,1] = 1 </em> 2 + 2 <em> 4 + 3 </em> 6 = 28</li>
+<li>Position [1,0] = M1[1,0] <em> M2[0,0] + M1[1,1] </em> M2[1,0] + M1[1,2] <em> M2[2,0] = 4 </em> 1 + 5 <em> 3 + 6 </em> 5 = 49</li>
+<li>Position [1,1] = M1[1,0] <em> M2[0,1] + M1[1,1] </em> M2[1,1] + M1[1,2] <em> M2[2,1] = 4 </em> 2 + 5 <em> 4 + 6 </em> 6 = 64</li>
+<li>Resulting in the 2x2 matrix [ [22,28], [49,64] ]</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Matrix-Vector">
+<a class="anchor" href="#Matrix-Vector" aria-hidden="true"><span class="octicon octicon-link"></span></a>Matrix-Vector<a class="anchor-link" href="#Matrix-Vector"> </a>
+</h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>For a matrix-vector multiplication to work, the number of values in the vector needs to equal n, the number of columns in the matrix. Multiplying a matrix of dimensions (m, n) with a vector of k values results in a vector with m values (number of rows in matrix).</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'------------'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">M1</span><span class="p">)</span>
+<span class="n">M1</span> <span class="o">@</span> <span class="n">v</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[1 2 3]
+------------
+[[1 2 3]
+ [4 5 6]]
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>array([14, 32])</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>Position [0,0] = M1[0,0] <em> v[0] + M1[0,1] </em> v[1] + M1[0,2] <em> v[2] = 1 </em> 1 + 2 <em> 2 + 3 </em> 3 = 14</li>
+<li>Position [0,1] = M1[1,0] <em> v[0] + M1[1,1] </em> v[1] + M1[1,2] <em> v[2] = 4 </em> 1 + 5 <em> 2 + 6 </em> 3 = 32</li>
+<li>Resulting in a vector with 2 values [14, 32]</li>
+</ul>
+
+</div>
+</div>
+</div>
+</div>
+
+
+
+  </div><!-- from https://github.com/utterance/utterances -->
+<script src="https://utteranc.es/client.js"
+        repo="guiOsorio/Gui-DS-Journey"
+        issue-term="title"
+        label="blogpost-comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script><a class="u-url" href="/Gui-DS-Journey/2022/07/10/LinAlg1.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/Gui-DS-Journey/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/Gui-DS-Journey/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/Gui-DS-Journey/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+      </div>
+      <div class="footer-col">
+        <p>This is a platform to share my experience embarking into the Data Science world!</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://github.com/guiOsorio" target="_blank" title="guiOsorio"><svg class="svg-icon grey"><use xlink:href="/Gui-DS-Journey/assets/minima-social-icons.svg#github"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
