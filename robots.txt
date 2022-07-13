@@ -1,1 +1,1 @@
-Sitemap: https://guiosorio.github.io/Gui-DS-Journey/sitemap.xml
+Sitemap: https://guiosorio.github.io/Gui-DS-Learning/sitemap.xml
